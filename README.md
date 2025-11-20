@@ -127,3 +127,68 @@ Conexión por localhost (solo entre los dos programas dentro de mi a PC)
   - el servidor actúa como “cerebro”
 
   - el cliente solo solicita información o servicios
+  
+--------------------------------------------------------
+
+# 📡 Actividad 4 – Servidor concurrente IMC
+Aplicación cliente/servidor con atención a múltiples clientes
+
+En esta actividad he modificado el servidor del ejercicio anterior para que pueda atender a varios clientes al mismo tiempo. Ahora el servidor lanza un hilo nuevo por cada cliente, lo que permite que varios usuarios calculen su IMC a la vez sin bloquear el sistema.
+
+## 🧩 ¿Qué se ha hecho en esta actividad?
+1. Creación de ManejadorCliente
+
+- He creado una clase llamada ManejadorCliente, que extiende Thread.
+Esta clase es la encargada de atender a un cliente concreto:
+
+  - Recibe su peso y altura.
+
+  - Calcula su IMC.
+
+  - Genera el consejo correspondiente.
+
+  - Devuelve los datos al cliente.
+
+Cada cliente funciona de forma independiente porque cada uno funciona en su propio hilo.
+
+2. Modificación del servidor para hacerlo concurrente
+
+- En vez de atender a un cliente y bloquearse, el servidor ahora hace esto:
+
+  - Acepta una conexión nueva.
+
+  - Crea un hilo ManejadorCliente para ese cliente.
+
+  - Ese hilo se encarga de todo.
+
+  - El servidor vuelve a escuchar para atender a más clientes.
+
+Esto permite que dos, tres o diez clientes hablen con el servidor de forma simultánea.
+
+## 🧠 ¿Qué hemos conseguido?
+
+- Un servidor iterativo: nunca para, siempre espera nuevos clientes.
+
+- Un servidor concurrente: puede atender a varios clientes al mismo tiempo.
+
+- Cada cliente recibe su IMC y su recomendación sin esperar al resto.
+
+## 🧪 Pruebas realizadas
+
+- He ejecutado varias ventanas del cliente a la vez:
+
+  - Todos los clientes se conectan correctamente.
+
+  - El servidor crea un hilo distinto por cliente.
+
+  - La respuesta llega bien a todas las ventanas.
+
+  - El orden de llegada cambia en cada ejecución (normal al tener varios hilos).
+
+## 🗂 Estructura del proyecto
+````css
+src/
+│── ServidorIMC.java        -> Servidor principal y concurrente
+│── ClienteIMC.java         -> Programa cliente
+│── ManejadorCliente.java   -> Hilo que atiende a cada cliente
+````
