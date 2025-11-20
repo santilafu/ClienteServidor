@@ -192,3 +192,127 @@ src/
 │── ClienteIMC.java         -> Programa cliente
 │── ManejadorCliente.java   -> Hilo que atiende a cada cliente
 ````
+
+----------------------------------------------------------
+🧩 Actividad 5 – Gestión de errores y tiempos de atención
+Arquitectura Cliente/Servidor concurrente con Sockets
+
+En este ejercicio he continuado trabajando sobre la aplicación cliente/servidor de los ejercicios 3 y 4.
+El objetivo ahora es mejorar la calidad del servidor, añadiendo:
+
+Comentarios claros por todo el código
+
+Capturas de excepciones para evitar fallos
+
+Cálculo del tiempo que tarda el servidor en atender a cada cliente
+
+Mensajes detallados en consola para ver la atención de cada usuario
+
+🎯 Objetivo del ejercicio
+
+El servidor debe:
+
+Atender a múltiples clientes simultáneamente (servidor concurrente).
+
+Gestionar correctamente errores y desconexiones.
+
+Medir cuánto tiempo tarda en atender a cada cliente usando System.currentTimeMillis().
+
+Mostrar en consola algo así cuando cada cliente termina:
+
+Cliente atendido en 742 ms.
+----------------------------------------------
+
+# 🧠 ¿Qué se ha mejorado respecto al ejercicio 4?
+### ✔ Gestión de errores
+
+Se han añadido capturas try/catch en:
+
+- Creación del socket
+
+- Comunicación con el cliente
+
+- Lectura de datos
+
+- Cálculo del IMC
+
+- Envío de mensaje final
+
+- Cierre del socket
+
+Esto evita que un fallo en un cliente tumbe el servidor entero.
+
+#### ✔ Documentación exhaustiva del código
+
+Todas las clases tienen comentarios explicando:
+
+- La responsabilidad de cada parte
+
+- Qué hace cada hilo
+
+- Qué representa cada flujo (entrada/salida)
+
+- Por qué se usa cada control de error
+
+- Cómo se calcula el tiempo de atención
+
+Los comentarios están orientados a que otro programador, sin saber nada, pueda entenderlo sin sufrir.
+
+### ✔ Medición del tiempo de atención
+
+Cada hilo registra:
+
+- Tiempo inicial: al empezar run()
+
+- Tiempo final: antes de cerrar
+
+- Diferencia = milisegundos atendiendo al cliente
+
+- Eso simula una métrica real de un servidor profesional.
+
+## 🧱 Estructura del proyecto
+`````css
+src/
+│── ServidorIMC.java         // Servidor que escucha y crea hilos
+│── ManejadorCliente.java    // Hilo que atiende a cada cliente + tiempo + errores
+│── ClienteIMC.java          // Cliente que envía peso y altura y recibe IMC
+`````
+## ⚙️ Funcionamiento
+
+1. El servidor se ejecuta en un puerto y queda escuchando.
+
+2. Cuando un cliente se conecta, el servidor crea un nuevo hilo (ManejadorCliente).
+
+3. El cliente envía su altura y peso.
+
+4. El hilo calcula el IMC, genera un consejo y lo devuelve.
+
+5. El hilo mide cuánto ha tardado la atención y lo muestra en la consola del servidor.
+
+6. El cliente recibe su resultado normalmente.
+
+## 🧪 Pruebas realizadas
+
+Se han ejecutado varios clientes en paralelo:
+
+- Todos reciben su IMC correctamente.
+
+- El servidor muestra tiempos distintos para cada cliente.
+
+- El orden de los mensajes cambia en cada ejecución (propio de un sistema concurrente).
+
+- Si un cliente mete datos incorrectos o cierra la conexión, el servidor no se rompe gracias al manejo de errores.
+
+## 🗣 Resumen final
+
+El servidor ahora está:
+
+- Documentado
+
+- Preparado para errores
+
+- Capaz de medir tiempos
+
+- Capaz de atender a varios clientes a la vez
+
+- Más cercano a una aplicación real en red

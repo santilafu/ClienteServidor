@@ -1,29 +1,34 @@
-//Servidor que calcula el Índice de Masa Corporal (IMC) de un cliente y manda el resultado y consejos de salud segun el IMC calculado.
-//Modificado para manejar multiples clientes de forma secuencial.
-//Importamos las librerías necesarias para crear un servidor
-import java.io.*;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
+// Servidor que escucha en un puerto y atiende a múltiples clientes en paralelo.
+// Cada cliente se gestiona con un hilo ManejadorCliente.
 public class ServidorIMC {
-    public static void main(String[] args){
+    public static void main(String[] args) {
+
         try {
-            //Creamos el socket del servidor en el puerto 12345
+            // Creamos el servidor en el puerto 12345.
+            // Ese será el puerto donde los clientes se conectarán.
             ServerSocket servidor = new ServerSocket(12345);
-            System.out.println("Servidor iniciado. Esperando conexiones...");
+            System.out.println("Servidor IMC iniciado. Esperando clientes...");
 
+            // Bucle infinito para que el servidor nunca deje de escuchar.
             while (true) {
-                //Aceptamos la conexión del cliente
+
+                // accept() se queda esperando hasta que un cliente se conecte.
                 Socket cliente = servidor.accept();
-                System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
+                System.out.println("Cliente conectado.");
 
-                //Lanzamos el hilo para manejar al cliente
-                ManejadorCliente mc = new ManejadorCliente(cliente);
-                mc.start();
+                // Creamos un hilo para ese cliente.
+                ManejadorCliente manejador = new ManejadorCliente(cliente);
 
-
+                // Iniciamos el hilo para que atienda al cliente en paralelo.
+                manejador.start();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (Exception e) {
+            // Capturamos errores del servidor: puerto ocupado, permisos, etc.
+            System.out.println("Error en el servidor: " + e.getMessage());
         }
     }
 }
